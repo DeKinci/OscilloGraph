@@ -21,7 +21,7 @@ public class OscilloGraph {
 
         ImageIO.write(eImage.getEditedImage(), "JPEG", new File("Images/prepared.jpg"));
 
-        /*TransferableImage tImage = new TransferableImage(eImage.getEditedImage());
-        tImage.transferImage();*/
+        TransferableImage tImage = new TransferableImage(eImage.getEditedImage());
+        tImage.transferImage();
     }
 }
