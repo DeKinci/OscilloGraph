@@ -1,4 +1,4 @@
-package org.dekinci.OscilloGraph.imagePart;
+package org.dekinci.oscillograph.imagepart;
 
 import java.awt.*;
 import java.awt.image.*;
@@ -17,26 +17,26 @@ public class EditableImage {
     public EditableImage(Image nonBufferedImage) {
         processingImage = new BufferedImage(nonBufferedImage.getWidth(null),
                                                 nonBufferedImage.getHeight(null),
-                                                BufferedImage.TYPE_INT_ARGB);
+                                                BufferedImage.TYPE_INT_RGB);
 
-        Graphics2D bGr = processingImage.createGraphics();
-        bGr.drawImage(nonBufferedImage, 0, 0, null);
-        bGr.dispose();
+        Graphics2D g = processingImage.createGraphics();
+        g.drawImage(nonBufferedImage, 0, 0, null);
+        g.dispose();
     }
 
     /**
      * Uses BnWImage class to create black and white image
-     * @param brightnessCoefficient to manipulate with the brightness of the picture
+     * @param brightnessCoefficient to manipulate the brightness of the picture
      */
     public void convertToBnW(double brightnessCoefficient) {
-        processingImage = new BnWImage(processingImage, brightnessCoefficient).getBnWImage();
+        processingImage = new BnWImage(processingImage).convertImage(brightnessCoefficient);
     }
 
     /**
      * Uses BnWImage class to create black and white image
      */
     public void convertToBnW() {
-        processingImage = new BnWImage(processingImage).getBnWImage();
+        processingImage = new BnWImage(processingImage).convertImage();
     }
 
     /**
@@ -44,7 +44,7 @@ public class EditableImage {
      * @param scaledHeight desired height of the image
      */
     public void resize(int scaledHeight) {
-        processingImage = new ResizableImage(processingImage, scaledHeight).getResized();
+        processingImage = new ResizableImage().resizeImage(processingImage, scaledHeight);
     }
 
     /**

@@ -1,4 +1,4 @@
-package org.dekinci.OscilloGraph.comPart;
+package org.dekinci.oscillograph.compart;
 
 import java.awt.image.BufferedImage;
 

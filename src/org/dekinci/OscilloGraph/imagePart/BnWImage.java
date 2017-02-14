@@ -1,4 +1,4 @@
-package org.dekinci.OscilloGraph.imagePart;
+package org.dekinci.oscillograph.imagepart;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,40 +12,39 @@ class BnWImage {
     private BufferedImage convertingImage;
 
     /**
-     * Constructor gets colored image, than changes every pixel color to black or white,
-     * according to brightness of the whole picture
-     *
-     * @param coloredImage the image to convert
-     * @param brightnessCoefficient allows to change brightness of the result manually
-     */
-    BnWImage(BufferedImage coloredImage, double brightnessCoefficient) {
-        convertingImage = coloredImage;
-        double finalBrightness = calculateAverageBrightness() - brightnessCoefficient;
-
-        for (int iterWidth = 0; iterWidth < convertingImage.getWidth(); iterWidth++)
-            for (int iterHeight = 0; iterHeight < convertingImage.getHeight(); iterHeight++) {
-                convertPixel(iterWidth, iterHeight, finalBrightness);
-            }
-    }
-
-    /**
-     * Constructor gets colored image, than changes every pixel color to black or white,
-     * according to brightness of the whole picture
+     * Constructor gets colored image and creates it's copy
      *
      * @param coloredImage the image to convert
      */
     BnWImage(BufferedImage coloredImage) {
-        convertingImage = coloredImage;
-        double finalBrightness = calculateAverageBrightness();
-
-        for (int iterWidth = 0; iterWidth < convertingImage.getWidth(); iterWidth++)
-            for (int iterHeight = 0; iterHeight < convertingImage.getHeight(); iterHeight++) {
-                convertPixel(iterWidth, iterHeight, finalBrightness);
-            }
+        BufferedImage converted = new BufferedImage(coloredImage.getWidth(), coloredImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = converted.createGraphics();
+        g.drawImage(coloredImage, 0, 0, null);
+        g.dispose();
+        convertingImage = converted;
     }
 
     /**
-     * Calulates the brightness of the whole picture
+     *
+     * @return converted image
+     */
+    public BufferedImage convertImage() {
+        converter(calculateAverageBrightness());
+        return convertingImage;
+    }
+
+    /**
+     *
+     * @param brightnessCoefficient to manipulate the brightness manually
+     * @return converted image
+     */
+    public BufferedImage convertImage(double brightnessCoefficient) {
+        converter(calculateAverageBrightness() - brightnessCoefficient);
+        return convertingImage;
+    }
+
+    /**
+     * Calculates brightness of the whole picture
      * uses average squares method
      *
      * @return picture's brightness
@@ -59,6 +58,21 @@ class BnWImage {
         averageBrightness /= (convertingImage.getHeight() * convertingImage.getWidth());
         return Math.sqrt(averageBrightness);
     }
+
+    /**
+     * runs throw and across the image, changing every pixel's color
+     * @param finalBrightness
+     */
+    private void converter(double finalBrightness) {
+        for (int iterWidth = 0; iterWidth < convertingImage.getWidth(); iterWidth++)
+            for (int iterHeight = 0; iterHeight < convertingImage.getHeight(); iterHeight++) {
+                convertPixel(iterWidth, iterHeight, finalBrightness);
+            }
+    }
+
+
+    private final int BLACK = 0x000000;
+    private final int WHITE = 0xFFFFFF;
     /**
      * Converts pixel, situated in coordinates to the black or white color,
      * based on if it brighter or darker than the brightness of the picture
@@ -69,9 +83,9 @@ class BnWImage {
      */
     private void convertPixel(int positionWidth, int positionHeight, double finalBrightness) {
         if (calculatePixelBrightness(positionWidth, positionHeight) - finalBrightness < 0)
-            convertingImage.setRGB(positionWidth, positionHeight, new Color(0, 0, 0).getRGB());
+            convertingImage.setRGB(positionWidth, positionHeight, BLACK);
         else
-            convertingImage.setRGB(positionWidth, positionHeight, new Color(255, 255, 255).getRGB());
+            convertingImage.setRGB(positionWidth, positionHeight, WHITE);
     }
 
     /**
@@ -85,25 +99,5 @@ class BnWImage {
         return  0.3 * clr.getRed()
                 + 0.59 * clr.getGreen()
                 + 0.11 * clr.getBlue();
-    }
-
-    /**
-     * redraw prevents wrong
-     * @return the BnW picture
-     */
-    BufferedImage getBnWImage() {
-        redraw();
-        return convertingImage;
-    }
-
-    /**
-     * To prevent bug with wrong colors
-     */
-    private void redraw() {
-        BufferedImage converted = new BufferedImage(convertingImage.getWidth(), convertingImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = converted.createGraphics();
-        g.drawImage(convertingImage, 0, 0, convertingImage.getWidth(), convertingImage.getHeight(), null);
-        g.dispose();
-        convertingImage = converted;
     }
 }

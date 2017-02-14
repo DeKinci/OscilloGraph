@@ -1,4 +1,4 @@
-package org.dekinci.OscilloGraph.imagePart;
+package org.dekinci.oscillograph.imagepart;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -9,62 +9,47 @@ import java.awt.image.BufferedImage;
  */
 
 class ResizableImage {
-    private BufferedImage resizingImage;
+    private BufferedImage scalingImage;
 
     /**
-     * recreates an image with new size
+     * creates image's copy with new size
      * saves the proportions of the image
      *
-     * uses calculateWidth to save the pro
-     *
-     * @param importedImage an image to resize
+     * @param imageToResize an image to resize
      * @param scaledHeight desired height of the image
      */
-    ResizableImage(BufferedImage importedImage, int scaledHeight) {
-        resizingImage = importedImage;
-
-        int scaledWidth = calculateWidth(scaledHeight);
-        BufferedImage scaled = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = scaled.createGraphics();
-        g.drawImage(importedImage, 0, 0, scaledWidth, scaledHeight, null);
-        g.dispose();
-
-        resizingImage = scaled;
+    public BufferedImage resizeImage(BufferedImage imageToResize, int scaledHeight) {
+        resizer(imageToResize,
+                imageToResize.getWidth() * scaledHeight / imageToResize.getHeight(), //scaled width calculations
+                scaledHeight);
+        return scalingImage;
     }
 
     /**
-     * recreates an image with new size
+     * creates image's copy with new size
      * doesn't saves proportions of the image
      *
-     * @param importedImage an image to resize
+     * @param imageToResize an image to resize
      * @param scaledHeight desired height of the image
      * @param scaledWidth desired width of the image
      */
-     ResizableImage(BufferedImage importedImage, int scaledHeight, int scaledWidth) {
-         BufferedImage scaled = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
-         Graphics2D g = scaled.createGraphics();
-         g.drawImage(importedImage, 0, 0, scaledWidth, scaledHeight, null);
-         g.dispose();
-
-         resizingImage = scaled;
+    public BufferedImage resizeImage(BufferedImage imageToResize, int scaledHeight, int scaledWidth) {
+        resizer(imageToResize, scaledWidth, scaledHeight);
+        return scalingImage;
     }
 
     /**
-     * calculates the proportions of the image
-     * and then multiplies them on the known height of the resized image
+     * creates image's copy with new size
      *
-     * @param scaledHeight desired height
-     * @return width based on height and keeping proportionals
+     * @param imageToResize an image to resize
+     * @param scaledWidth desired width of the image
+     * @param scaledHeight desired height of the image
      */
-    private int calculateWidth(int scaledHeight) {
-        return resizingImage.getWidth() * scaledHeight / resizingImage.getHeight(); // Wi / Hi = W / H
-    }
-
-    /**
-     *
-     * @return the buffered resized image
-     */
-    BufferedImage getResized() {
-        return resizingImage;
+    private void resizer(BufferedImage imageToResize, int scaledWidth, int scaledHeight) {
+        BufferedImage scaled = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = scaled.createGraphics();
+        g.drawImage(imageToResize, 0, 0, scaledWidth, scaledHeight, null);
+        g.dispose();
+        scalingImage = scaled;
     }
 }

@@ -1,7 +1,7 @@
-package org.dekinci.OscilloGraph;
+package org.dekinci.oscillograph;
 
-import org.dekinci.OscilloGraph.comPart.TransferableImage;
-import org.dekinci.OscilloGraph.imagePart.EditableImage;
+import org.dekinci.oscillograph.compart.TransferableImage;
+import org.dekinci.oscillograph.imagepart.EditableImage;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -16,7 +16,7 @@ public class OscilloGraph {
         final int heightOscill = 11; //according to the arduino Mega PWM outputs
 
         EditableImage eImage = new EditableImage(ImageIO.read(new File("Images/image.jpg")));
-        eImage.convertToBnW(10);
+        eImage.convertToBnW();
         eImage.resize(heightOscill);
 
         ImageIO.write(eImage.getEditedImage(), "JPEG", new File("Images/prepared.jpg"));
