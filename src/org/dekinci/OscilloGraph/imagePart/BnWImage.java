@@ -27,6 +27,7 @@ class BnWImage {
             for (int iterHeight = 0; iterHeight < convertingImage.getHeight(); iterHeight++) {
                 convertPixel(iterWidth, iterHeight, finalBrightness);
             }
+        redraw();
     }
 
     /**
@@ -44,6 +45,7 @@ class BnWImage {
             for (int iterHeight = 0; iterHeight < convertingImage.getHeight(); iterHeight++) {
                 convertPixel(iterWidth, iterHeight, finalBrightness);
             }
+        redraw();
     }
 
     /**
@@ -81,9 +83,20 @@ class BnWImage {
                         + 0.11 * pixelColor.getBlue();
 
         if (brightness - finalBrightness < 0)
-            convertingImage.setRGB(positionWidth, positionHeight, 0);       // 0 - black
+            convertingImage.setRGB(positionWidth, positionHeight, new Color(0, 0, 0).getRGB());
         else
             convertingImage.setRGB(positionWidth, positionHeight, new Color(255, 255, 255).getRGB());
+    }
+
+    /**
+     * To prevent bug with wrong colors
+     */
+    private void redraw() {
+        BufferedImage converted = new BufferedImage(convertingImage.getWidth(), convertingImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = converted.createGraphics();
+        g.drawImage(convertingImage, 0, 0, convertingImage.getWidth(), convertingImage.getHeight(), null);
+        g.dispose();
+        convertingImage = converted;
     }
 
     /**
