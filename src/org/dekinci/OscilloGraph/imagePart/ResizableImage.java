@@ -23,7 +23,7 @@ class ResizableImage {
     ResizableImage(BufferedImage importedImage, int scaledHeight) {
         resizingImage = importedImage;
 
-        int scaledWidth = calulateWidth(scaledHeight);
+        int scaledWidth = calculateWidth(scaledHeight);
         BufferedImage scaled = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = scaled.createGraphics();
 
@@ -56,7 +56,7 @@ class ResizableImage {
      * @param scaledHeight desired height
      * @return width based on height and keeping proportionals
      */
-    private int calulateWidth (int scaledHeight) {
+    private int calculateWidth(int scaledHeight) {
         return resizingImage.getWidth() * scaledHeight / resizingImage.getHeight(); // Wi / Hi = W / H
     }
 
