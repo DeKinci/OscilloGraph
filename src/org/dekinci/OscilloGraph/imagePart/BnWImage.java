@@ -20,14 +20,12 @@ class BnWImage {
      */
     BnWImage(BufferedImage coloredImage, double brightnessCoefficient) {
         convertingImage = coloredImage;
-
-        double finalBrightness = calculateAverageBrightness() + brightnessCoefficient;
+        double finalBrightness = calculateAverageBrightness() - brightnessCoefficient;
 
         for (int iterWidth = 0; iterWidth < convertingImage.getWidth(); iterWidth++)
             for (int iterHeight = 0; iterHeight < convertingImage.getHeight(); iterHeight++) {
                 convertPixel(iterWidth, iterHeight, finalBrightness);
             }
-        redraw();
     }
 
     /**
@@ -38,14 +36,12 @@ class BnWImage {
      */
     BnWImage(BufferedImage coloredImage) {
         convertingImage = coloredImage;
-
         double finalBrightness = calculateAverageBrightness();
 
         for (int iterWidth = 0; iterWidth < convertingImage.getWidth(); iterWidth++)
             for (int iterHeight = 0; iterHeight < convertingImage.getHeight(); iterHeight++) {
                 convertPixel(iterWidth, iterHeight, finalBrightness);
             }
-        redraw();
     }
 
     /**
@@ -57,15 +53,10 @@ class BnWImage {
     private double calculateAverageBrightness() {
         double averageBrightness = 0;
         for (int iterWidth = 0; iterWidth < convertingImage.getWidth(); iterWidth++)
-            for (int iterHeight = 0; iterHeight < convertingImage.getHeight(); iterHeight++) {
-                Color pixelColor = new Color(convertingImage.getRGB(iterWidth, iterHeight));
-                double brightness = 0.3 * pixelColor.getRed()
-                                + 0.59 * pixelColor.getGreen()
-                                + 0.11 * pixelColor.getBlue();
+            for (int iterHeight = 0; iterHeight < convertingImage.getHeight(); iterHeight++)
+                averageBrightness += Math.pow(calculatePixelBrightness(iterWidth, iterHeight), 2);
 
-                averageBrightness += brightness * brightness;            }
         averageBrightness /= (convertingImage.getHeight() * convertingImage.getWidth());
-
         return Math.sqrt(averageBrightness);
     }
     /**
@@ -77,15 +68,32 @@ class BnWImage {
      * @param finalBrightness brightness of the picture, might be changed with coefficient
      */
     private void convertPixel(int positionWidth, int positionHeight, double finalBrightness) {
-        Color pixelColor = new Color(convertingImage.getRGB(positionWidth, positionHeight));
-        double brightness = 0.3 * pixelColor.getRed()
-                        + 0.59 * pixelColor.getGreen()
-                        + 0.11 * pixelColor.getBlue();
-
-        if (brightness - finalBrightness < 0)
+        if (calculatePixelBrightness(positionWidth, positionHeight) - finalBrightness < 0)
             convertingImage.setRGB(positionWidth, positionHeight, new Color(0, 0, 0).getRGB());
         else
             convertingImage.setRGB(positionWidth, positionHeight, new Color(255, 255, 255).getRGB());
+    }
+
+    /**
+     * Calculate the brightness of the pixel, based on formula
+     * @param positionWidth X position of the pixel
+     * @param positionHeight Y position of the pixel
+     * @return calculated brightness
+     */
+    private double calculatePixelBrightness(int positionWidth, int positionHeight) {
+        Color clr = new Color(convertingImage.getRGB(positionWidth, positionHeight));
+        return  0.3 * clr.getRed()
+                + 0.59 * clr.getGreen()
+                + 0.11 * clr.getBlue();
+    }
+
+    /**
+     * redraw prevents wrong
+     * @return the BnW picture
+     */
+    BufferedImage getBnWImage() {
+        redraw();
+        return convertingImage;
     }
 
     /**
@@ -97,13 +105,5 @@ class BnWImage {
         g.drawImage(convertingImage, 0, 0, convertingImage.getWidth(), convertingImage.getHeight(), null);
         g.dispose();
         convertingImage = converted;
-    }
-
-    /**
-     *
-     * @return the BnW picture
-     */
-    BufferedImage getBnWImage() {
-        return convertingImage;
     }
 }

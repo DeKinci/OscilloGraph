@@ -26,11 +26,10 @@ class ResizableImage {
         int scaledWidth = calculateWidth(scaledHeight);
         BufferedImage scaled = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = scaled.createGraphics();
-
         g.drawImage(importedImage, 0, 0, scaledWidth, scaledHeight, null);
         g.dispose();
 
-        this.resizingImage = scaled;
+        resizingImage = scaled;
     }
 
     /**
@@ -41,12 +40,13 @@ class ResizableImage {
      * @param scaledHeight desired height of the image
      * @param scaledWidth desired width of the image
      */
-    public ResizableImage(BufferedImage importedImage, int scaledHeight, int scaledWidth) {
-        resizingImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = resizingImage.createGraphics();
+     ResizableImage(BufferedImage importedImage, int scaledHeight, int scaledWidth) {
+         BufferedImage scaled = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
+         Graphics2D g = scaled.createGraphics();
+         g.drawImage(importedImage, 0, 0, scaledWidth, scaledHeight, null);
+         g.dispose();
 
-        g.drawImage(importedImage, 0, 0, scaledWidth, scaledHeight, null);
-        g.dispose();
+         resizingImage = scaled;
     }
 
     /**

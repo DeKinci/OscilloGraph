@@ -16,7 +16,7 @@ public class OscilloGraph {
         final int heightOscill = 11; //according to the arduino Mega PWM outputs
 
         EditableImage eImage = new EditableImage(ImageIO.read(new File("Images/image.jpg")));
-        eImage.convertToBnW();
+        eImage.convertToBnW(10);
         eImage.resize(heightOscill);
 
         ImageIO.write(eImage.getEditedImage(), "JPEG", new File("Images/prepared.jpg"));
