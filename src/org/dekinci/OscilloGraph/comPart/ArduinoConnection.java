@@ -1,31 +1,23 @@
 package org.dekinci.oscillograph.compart;
 
 import jssc.*;
-
 import java.util.Scanner;
 
 /**
- * A connection with Arduino board usding COM port
+ * A connection with Arduino board using COM port
  */
 
-class ArduinoConnection {
+public class ArduinoConnection {
     private SerialPort port;
 
     /**
      * Setting port up and testing it
      */
-    ArduinoConnection() {
+    public ArduinoConnection() {
         port = new SerialPort(portChooser());
 
         portSetup();
         connectionTest();
-    }
-
-    /**
-     * @return port used by connection
-     */
-    public SerialPort getPort() {
-        return port;
     }
 
     /**
@@ -81,6 +73,28 @@ class ArduinoConnection {
 
         } catch (SerialPortException e) {
             throw new RuntimeException("Port setup error");
+        }
+    }
+
+    /**
+     * No need to remember to close the port when transfer is finished!!!!!1!11!1!1!
+     * This is sooo freaking awesome!!
+     */
+    private void setClosePortHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(this::closePort));
+    }
+
+    /**
+     * Don't forgot to close it!!!
+     */
+    private void closePort() {
+        try {
+            if (port != null && port.isOpened()) {
+                System.out.println("Closing port...");
+                port.closePort();
+            }
+        } catch (SerialPortException e) {
+            throw new RuntimeException("Error closing port");
         }
     }
 
@@ -153,11 +167,7 @@ class ArduinoConnection {
         if (buffer == new byte[] { (byte) 0xA1 } )
             System.out.println("Port is opened and configured");
         else {
-            try {
-                port.closePort();
-            } catch (SerialPortException e) {
-                throw new RuntimeException("Port close error");
-            }
+            closePort();
             throw new RuntimeException("Error connecting the port, state " + Integer.toHexString(Byte.toUnsignedInt(buffer[0])));
         }
     }
@@ -166,7 +176,7 @@ class ArduinoConnection {
      * just sending a byte through the port
      * @param X - send it
      */
-    void writeByte(Byte X) {
+    public void writeByte(Byte X) {
         try {
             port.writeByte(X);
         } catch (SerialPortException e) {
@@ -178,7 +188,7 @@ class ArduinoConnection {
      * just sending an integer through the port
      * @param X - send it
      */
-    void writeInt(int X) {
+    public void writeInt(int X) {
         try {
             port.writeInt(X);
         } catch (SerialPortException e) {
@@ -187,24 +197,9 @@ class ArduinoConnection {
     }
 
     /**
-     * Don't forgot to close it!!!
+     * @return port used by connection
      */
-    private void closePort() {
-        try {
-            if (port != null && port.isOpened()) {
-                System.out.println("Closing port...");
-                port.closePort();
-            }
-        } catch (SerialPortException e) {
-            throw new RuntimeException("Error closing port");
-        }
-    }
-
-    /**
-     * No need to remember to close the port when transfer is finished!!!!!1!11!1!1!
-     * This is sooo freaking awesome!!
-     */
-    private void setClosePortHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread(this::closePort));
+    public SerialPort getPort() {
+        return port;
     }
 }

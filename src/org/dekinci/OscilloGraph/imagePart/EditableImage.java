@@ -47,6 +47,10 @@ public class EditableImage {
         processingImage = new ImageResizer().resizeImage(processingImage, scaledHeight);
     }
 
+    public void transmitImage() {
+        new ImageTransmitter().transmitImage(processingImage);
+    }
+
     /**
      * @return buffered edited image
      */

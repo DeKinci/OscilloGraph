@@ -1,6 +1,5 @@
 package org.dekinci.oscillograph;
 
-import org.dekinci.oscillograph.compart.TransferableImage;
 import org.dekinci.oscillograph.imagepart.EditableImage;
 
 import javax.imageio.ImageIO;
@@ -18,10 +17,8 @@ public class OscilloGraph {
         EditableImage eImage = new EditableImage(ImageIO.read(new File("Images/image.jpg")));
         eImage.convertToBnW();
         eImage.resize(heightOscill);
+        eImage.transmitImage();
 
         ImageIO.write(eImage.getEditedImage(), "JPEG", new File("Images/prepared.jpg"));
-
-        //TransferableImage tImage = new TransferableImage(eImage.getEditedImage());
-        //tImage.transferImage();
     }
 }
