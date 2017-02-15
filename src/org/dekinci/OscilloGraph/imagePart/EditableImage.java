@@ -25,26 +25,26 @@ public class EditableImage {
     }
 
     /**
-     * Uses BnWImage class to create black and white image
+     * Uses BnWImageConverter class to create black and white image
      * @param brightnessCoefficient to manipulate the brightness of the picture
      */
     public void convertToBnW(double brightnessCoefficient) {
-        processingImage = new BnWImage(processingImage).convertImage(brightnessCoefficient);
+        processingImage = new BnWImageConverter().convertImage(processingImage, brightnessCoefficient);
     }
 
     /**
-     * Uses BnWImage class to create black and white image
+     * Uses BnWImageConverter class to create black and white image
      */
     public void convertToBnW() {
-        processingImage = new BnWImage(processingImage).convertImage();
+        processingImage = new BnWImageConverter().convertImage(processingImage);
     }
 
     /**
-     * Uses ResizableImage class to downscale the image
+     * Uses ImageResizer class to downscale the image
      * @param scaledHeight desired height of the image
      */
     public void resize(int scaledHeight) {
-        processingImage = new ResizableImage().resizeImage(processingImage, scaledHeight);
+        processingImage = new ImageResizer().resizeImage(processingImage, scaledHeight);
     }
 
     /**
